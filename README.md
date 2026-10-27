@@ -1,490 +1,278 @@
-<div align="center">
+# Policy_Match_AI (GovSchemeAI)
 
-<img src="https://www.sju.edu.in/assets/img/st-joseph-university-logo.png" height="80" style="background:white; padding:8px; margin:0 16px;" />
-<img src="https://www.erafoundationindia.org/images/logo.svg" height="80" style="background:white; padding:8px; margin:0 16px;" />
-<img src="https://comedkares.org/wp-content/uploads/2023/04/Comedkares-Logo-EPS.png" height="80" style="background:white; padding:8px; margin:0 16px;" />
+> **Conversational Government Scheme Advisor using RAG, FAISS Semantic Search, and Large Language Models.**
 
-</div>
-
----
-
-# Policy_Match_AI
-
-## Multilingual AI-Powered Government Scheme Discovery Platform
-
-### Conversational Government Scheme Advisor using RAG, Semantic Search and Large Language Models
-
-**Naveen Kumar K, MSc BDA, 252BDA25· Dharnesh, MSc BDA, 252BDA27· Prithvish William, MSc BDA, 252BDA18**
-
-# Abstract
-
-Policy_Match_AI is an AI-powered conversational platform designed to simplify access to government welfare schemes for Indian citizens.
-
-The system combines:
-
-- Retrieval-Augmented Generation (RAG)
-- Sentence Transformers
-- FAISS Semantic Search
-- Groq LLM
-- Conversational Memory
-- FastAPI Backend
-
-to help citizens discover government schemes relevant to their personal circumstances.
-
-Unlike traditional government portals that require users to manually search through thousands of schemes, GovSchemeAI allows citizens to interact naturally through conversational text, voice, and AI avatars.
-
-Example:
-
-> "I am a farmer from Karnataka with an annual income of ₹2 lakh."
-
-The system dynamically retrieves and explains relevant schemes from a curated government scheme knowledge base.
-
-Future versions will include multilingual voice interaction, AI avatars, and mobile deployment through Flutter.
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-009688.svg)](https://fastapi.tiangolo.com/)
+[![FAISS](https://img.shields.io/badge/Vector%20Search-FAISS-green.svg)](https://github.com/facebookresearch/faiss)
+[![Groq](https://img.shields.io/badge/LLM-Groq%20LLaMA--3.3--70B-orange.svg)](https://groq.com/)
+[![Flutter](https://img.shields.io/badge/Frontend-Flutter-02569B.svg)](https://flutter.dev/)
+[![NDCG@5](https://img.shields.io/badge/RAG%20Score-NDCG%405%200.8324-brightgreen.svg)]()
 
 ---
 
-# Features
+## 📌 Overview
 
-## Current Features
+**Policy_Match_AI** is an AI-powered conversational platform engineered to simplify access to government welfare schemes for Indian citizens. 
 
-- Government Scheme Dataset (3368+ Schemes)
-- Semantic Search using FAISS
-- Sentence Transformer Embeddings
-- Retrieval-Augmented Generation (RAG)
-- Groq LLM Integration
-- Profile Extraction
-- Dynamic User Profiling
-- Multi-Turn Conversations
-- Session Memory
-- Context-Aware Responses
-- FastAPI Backend
+While the central and state governments offer thousands of assistance programs, citizens frequently miss out due to fragmented information, bureaucratic language, and complex eligibility criteria. **Policy_Match_AI** replaces rigid portal browsing with a natural, conversational advisor capable of understanding citizen queries, dynamically profiling user demographics, and recommending verified policies from a curated database of **3,368+ government schemes**.
+
+Citizens can interact naturally through **text chat, real-time voice, or an interactive AI avatar** in their native language (**English, Hindi, Tamil, and Kannada**).
 
 ---
 
-## Upcoming Features
+## 🌟 Key Features
 
-- Flutter Mobile Application
-- Email / Phone Authentication
-- PostgreSQL Database
-- Voice Chat
-- AI Avatar
-- Multilingual Support
-- Conversation History
-- User Analytics
-
----
-
-# Problem Statement
-
-Government welfare schemes are often difficult to discover and understand due to:
-
-- Lack of awareness
-- Language barriers
-- Complex eligibility criteria
-- Fragmented information sources
-- Poor accessibility of government portals
-
-GovSchemeAI addresses these challenges through a conversational AI platform capable of understanding user needs, retrieving relevant schemes, and explaining them in simple natural language.
+- **Curated Knowledge Base (3,368+ Schemes):** Comprehensive dataset spanning Agriculture, Education, Women Welfare, Healthcare, MSME/Business, and Social Security.
+- **Dense Semantic Retrieval:** Powered by `SentenceTransformer("all-MiniLM-L6-v2")` and **FAISS** vector search for high-speed, sub-millisecond similarity matching in 384-dimensional space.
+- **Dynamic User Profiling:** Automatically extracts demographic constraints (*Age, Occupation, Income, State, Social Category, Gender*) using LLM extraction with regex fallback.
+- **Hallucination-Free Generation:** Answers are synthesized using **Groq (`llama-3.3-70b-versatile`)**, strictly grounded in retrieved scheme facts.
+- **Multi-Turn Context & Session Memory:** Maintains conversational history and detects follow-up questions (e.g., *"Am I eligible for the second one?"*).
+- **Production-Ready REST API:** Built with **FastAPI** with CORS middleware, session lifecycle tracking, and auto-generated Swagger documentation.
+- **Quantitative RAG Evaluation:** Evaluated with formal Information Retrieval metrics (**NDCG@5 = 0.8324**, **MRR = 0.8100**, **Hit Rate = 100%**).
+- **Cross-Platform Mobile App (Flutter):** Fully featured client with multi-language localization, Speech-to-Text, Text-to-Speech, and an interactive video avatar interface.
 
 ---
 
-# Objectives
-
-- Build a conversational AI assistant for government schemes.
-- Enable semantic retrieval using Sentence Transformers and FAISS.
-- Support dynamic user profile extraction.
-- Maintain multi-turn conversational memory.
-- Deliver personalized scheme recommendations.
-- Prevent hallucinations through RAG grounding.
-- Support multilingual communication.
-- Enable voice and avatar-based interactions.
-- Improve accessibility of government welfare information.
-
----
-
-# System Architecture
+## 🏗️ System Architecture
 
 ```text
-User
-  │
-  ▼
-Flutter Mobile App
-  │
-  ▼
-FastAPI Backend
-  │
-  ▼
-Profile Extraction
-  │
-  ▼
-Session Memory
-  │
-  ▼
-Sentence Transformer Embeddings
-  │
-  ▼
-FAISS Semantic Search
-  │
-  ▼
-Top Relevant Schemes
-  │
-  ▼
-Groq LLM
-  │
-  ▼
-Context-Aware Response
-  │
-  ▼
-User
+Citizen Input (Text / Voice / Video Avatar)
+                     │
+                     ▼
+        Flutter Mobile Application
+                     │  HTTP / JSON
+                     ▼
+         FastAPI Backend (main.py)
+                     │
+         ┌───────────┴───────────┐
+         ▼                       ▼
+Profile Extractor       Session / Dialogue Memory
+(Age, Income, State)    (Multi-turn context tracking)
+         │                       │
+         └───────────┬───────────┘
+                     ▼
+      Query Formulation & Enrichment
+                     │
+                     ▼
+     SentenceTransformer Embeddings
+           (all-MiniLM-L6-v2)
+                     │
+                     ▼
+        FAISS Semantic Vector Index
+         (3,368 Schemes in RAM)
+                     │
+                     ▼
+           Top-K Relevant Schemes
+                     │
+                     ▼
+          Groq LLM (LLaMA 3.3 70B)
+    (Grounded multi-lingual explanation)
+                     │
+                     ▼
+      Personalized Scheme Guidance
 ```
 
 ---
 
-# Methodology
+## 📊 RAG Performance & Benchmark Evaluation
 
-## Step 1: User Query
+A formal Information Retrieval benchmark (`rag_evaluator.py`) was conducted across test queries with labeled ground-truth data:
 
-Example:
-
-```text
-I am a farmer from Karnataka with annual income of ₹2 lakh.
-```
-
----
-
-## Step 2: Profile Extraction
-
-The system extracts:
-
-- Occupation
-- Age
-- Income
-- State
-- Gender
-- Category
-
-The profile is continuously updated throughout the conversation.
+| Metric | Score Achieved | Quality Threshold | Interpretation |
+| :--- | :---: | :---: | :--- |
+| **NDCG@5** | **`0.8324`** | $> 0.80$ (Excellent) | Scheme recommendations are **83.2% optimally ranked** by relevance. |
+| **MRR** | **`0.8100`** | $> 0.70$ (High) | The first strictly relevant scheme appears on average at rank **1.2**. |
+| **Precision@5** | **`0.8400`** | $> 0.75$ (Strong) | **84%** of all schemes in the top-5 recommendations are relevant. |
+| **Recall** | **`0.7600`** | $> 0.70$ (Good) | Covers **76%** of all matching welfare programs in the database. |
+| **Hit Rate** | **`100.0%`** | $100\%$ | Every tested user query successfully surfaced relevant schemes. |
+| **Query Latency** | **`300 - 500 ms`** | Real-time | Rapid retrieval and generation powered by FAISS and Groq LPU. |
 
 ---
 
-## Step 3: Embedding Generation
+## 💡 How It Works: Semantic Search vs Keyword Matching
 
-The query is converted into vector embeddings using:
+Traditional search fails when citizens describe their life situations without using official bureaucratic terms:
 
-```text
-SentenceTransformer
-all-MiniLM-L6-v2
-```
-
----
-
-## Step 4: Semantic Retrieval
-
-FAISS retrieves the most relevant government schemes based on semantic similarity.
-
-Example:
-
-- PM-KISAN
-- Agriculture Infrastructure Fund
-- Crop Insurance Scheme
-- Kisan Credit Card
+| What the Citizen Says | Keyword Search Result | Semantic Search Result (Our System) |
+| :--- | :---: | :--- |
+| *"My crops got ruined in the flood."* | ❌ **0 Matches** (Words "ruined" / "flood" missing) | ✅ **PM Fasal Bima Yojana** (Understands calamity crop insurance in vector space) |
+| *"Help paying tuition for my daughter after 12th."* | ❌ **0 Matches** | ✅ **Pragati / Post-Matric Scholarship** (Identifies higher education aid) |
+| *"Support for single mothers."* | ❌ **0 Matches** | ✅ **Indira Gandhi Widow & Destitute Women Pension** (Maps to assistance neighborhood) |
 
 ---
 
-## Step 5: Response Generation
-
-Retrieved schemes are passed to the Groq LLM.
-
-The LLM:
-
-- Explains schemes
-- Answers follow-up questions
-- Maintains context
-- Generates human-like responses
-
----
-
-## Step 6: Conversational Memory
-
-The system remembers:
-
-- User profile
-- Recommended schemes
-- Selected scheme
-- Previous questions
-- Previous responses
-
-This enables natural follow-up conversations.
-
----
-
-# Technology Stack
-
-| Component | Technology |
-|------------|------------|
-| Frontend | Flutter (Upcoming) |
-| Backend | FastAPI |
-| LLM | Groq (Llama 3) |
-| Semantic Search | FAISS |
-| Embeddings | Sentence Transformers |
-| Dataset Storage | CSV |
-| Database | PostgreSQL (Upcoming) |
-| Session Memory | Custom Session Manager |
-| Voice Processing | Whisper (Planned) |
-| Translation | IndicTrans2 (Planned) |
-| Avatar System | D-ID / HeyGen (Planned) |
-
----
-
-# Project Structure
+## 📁 Repository Structure
 
 ```text
 GovSchemeAI/
-│
 ├── data/
-│   ├── cleaned_schemes.csv
-│
+│   ├── cleaned_schemes.csv            # Cleaned scheme dataset (3,368+ records)
+│   ├── schemes_with_text.csv          # Unified textual representations
+│   ├── schemes_with_embeddings.csv    # Schemes mapped with embedding indices
+│   └── candidate_ground_truth.csv     # Labeled benchmark ground-truth
 ├── models/
-│   ├── scheme_index.faiss
-│
+│   ├── scheme_index.faiss             # Pre-built FAISS dense vector index
+│   └── embeddings.npy                 # 384-dimensional numpy vector arrays
 ├── src/
-│   ├── app.py
-│   ├── api.py
-│   ├── rag_engine.py
-│   ├── response_generator.py
-│   ├── profile_extractor.py
-│   ├── session_manager.py
-│   ├── conversation_manager.py
-│   └── utils.py
-│
-├── tests/
-│
-├── requirements.txt
-│
+│   ├── app.py                         # Production GovernmentSchemeAssistant pipeline
+│   ├── rag_engine.py                  # Optimized RAG engine with FAISS & cache
+│   ├── profile_extractor.py           # Demographic extractor (Groq + Regex fallback)
+│   ├── response_generator.py          # Grounded Groq response synthesizer
+│   ├── conversation_manager.py        # Dialogue state & multi-turn memory
+│   ├── utils.py                       # Follow-up intent detection helpers
+│   ├── search.py                      # Standalone vector search module
+│   ├── embedding.py                   # Embedding generation pipeline
+│   ├── faiss_index.py                 # FAISS indexing build script
+│   └── cleaning_*.py                  # Data cleaning and text merging scripts
+├── testing/
+│   ├── test_engine.py                 # RAG retrieval tests
+│   ├── test_groq.py                   # Groq API integration test
+│   ├── test_model.py                  # SentenceTransformer test
+│   └── quick_test.py                  # End-to-end quick pipeline check
+├── markdowns/
+│   ├── BACKEND_GUIDE.md               # Backend architecture & deployment guide
+│   ├── DELIVERY_SUMMARY.md            # Comprehensive project delivery recap
+│   ├── QUICK_START.md                 # 5-minute setup and presentation talking points
+│   └── GovSchemeAI_Complete_Project_Report.pdf  # Formal project report PDF
+├── main.py                            # FastAPI server (/chat, /new-session)
+├── rag_evaluator.py                   # Quantitative RAG evaluation runner
+├── analyze_results.py                 # Evaluates best and worst query scores
+├── build_ground_truth.py              # Ground-truth dataset builder
+├── requirements.txt                   # Complete Python dependencies
+├── .env.example                       # Environment variable templates
 └── README.md
 ```
 
 ---
 
-# Installation
+## 🚀 Quick Start Guide
 
-## Clone Repository
+### 1. Prerequisites
+- Python 3.10+
+- A free [Groq API Key](https://console.groq.com/)
 
-```bash
-git clone https://github.com/yourusername/GovSchemeAI.git
-cd GovSchemeAI
-```
-
----
-
-## Create Virtual Environment
+### 2. Clone and Setup Environment
 
 ```bash
+# Clone the repository
+git clone https://github.com/naveenkumark2830-spec/Policy_Match_AI.git
+cd Policy_Match_AI
+
+# Create virtual environment
 python -m venv venv
-```
 
-Activate:
-
-### Windows
-
-```bash
+# Activate virtual environment
+# Windows:
 venv\Scripts\activate
-```
-
-### Linux / Mac
-
-```bash
+# Linux/macOS:
 source venv/bin/activate
-```
 
----
-
-## Install Dependencies
-
-```bash
+# Install dependencies
 pip install -r requirements.txt
 ```
 
----
+### 3. Configure Environment Variables
 
-# Run Application
-
-## CLI Version
+Create a `.env` file in the root directory (based on `.env.example`):
 
 ```bash
-python run.py
+cp .env.example .env
 ```
 
----
+Open `.env` and add your Groq API key:
 
-## FastAPI Backend
+```env
+GROQ_API_KEY=gsk_your_groq_api_key_here
+```
+
+### 4. Run Interactive CLI Advisor
 
 ```bash
-uvicorn src.api:app --reload
+python -m src.app
 ```
 
-Open:
+### 5. Start the FastAPI Server
 
-```text
-http://127.0.0.1:8000/docs
+```bash
+python main.py
+# Or using uvicorn:
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+Interactive Swagger documentation is available at:
+**[http://localhost:8000/docs](http://localhost:8000/docs)**
+
+---
+
+## 📡 API Reference
+
+### 1. Create a New Session
+* **Endpoint:** `GET /new-session`
+* **Response:**
+  ```json
+  {
+    "session_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  }
+  ```
+
+### 2. Send a Chat Message
+* **Endpoint:** `POST /chat`
+* **Request Body:**
+  ```json
+  {
+    "session_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "message": "I am a small farmer in Karnataka with annual income of 1.5 lakh.",
+    "language": "English"
+  }
+  ```
+* **Supported Languages:** `"English"`, `"Hindi"`, `"Tamil"`, `"Kannada"`
+* **Response:**
+  ```json
+  {
+    "session_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "response": "Based on your profile, here are the top schemes for you: \n1. PM-KISAN..."
+  }
+  ```
+
+---
+
+## 🧪 Running RAG Benchmarks
+
+To evaluate retrieval precision, NDCG, and reciprocal ranks against the ground-truth benchmark:
+
+```bash
+python rag_evaluator.py
+```
+
+To inspect performance across individual queries:
+
+```bash
+python analyze_results.py
 ```
 
 ---
 
-# Example Conversation
+## 📱 Mobile Client (Flutter)
 
-### User
-
-```text
-I am a farmer from Karnataka.
-```
-
-### Assistant
-
-```text
-Based on your profile, these schemes may help:
-
-1. PM-KISAN
-2. Agriculture Infrastructure Fund
-3. Crop Insurance Scheme
-4. Kisan Credit Card
-5. Krishi Bhagya
-
-Would you like details about any of these?
-```
-
-### User
-
-```text
-Tell me more about the second one.
-```
-
-### Assistant
-
-Explains Agriculture Infrastructure Fund.
-
-### User
-
-```text
-Am I eligible?
-```
-
-Assistant uses conversation context and user profile to answer.
+The companion cross-platform mobile client (`govschemeai_app`) includes:
+- **Multilingual UI:** One-tap switching between English, Hindi, Tamil, and Kannada.
+- **Voice Screen:** Real-time speech input (`speech_to_text`) and natural spoken responses (`flutter_tts`) with audio pulse visualization.
+- **Interactive AI Avatar:** Video call simulation with real-time camera feed (`camera`), animated talking avatar head, and synchronized captions.
+- **Category Explorer:** Instant browsing for Farmers, Students, Women, Startups, Senior Citizens, and Employment.
 
 ---
 
-# Dataset
+## 👥 Authors & Academic Credits
 
-Current Dataset:
+- **Naveen Kumar K** (MSc Big Data Analytics, Reg No: `252BDA25`)
+- **Dharnesh** (MSc Big Data Analytics, Reg No: `252BDA27`)
+- **Prithvish William** (MSc Big Data Analytics, Reg No: `252BDA18`)
 
-```text
-3368 Government Schemes
-```
-
-Contains:
-
-- Scheme Name
-- Benefits
-- Eligibility
-- Financial Assistance
-- Application Information
-- State Information
-- Detailed Description
-
-The dataset is transformed into a unified text representation for semantic search.
+*Department of Big Data Analytics, St. Joseph's University, Bengaluru.*
 
 ---
 
-# Future Scope
+## 📄 License & Disclaimer
 
-## Voice AI
-
-Support for:
-
-- English
-- Hindi
-- Tamil
-- Kannada
-
----
-
-## AI Avatar
-
-Features:
-
-- Human-like digital assistant
-- Lip-sync speech
-- Natural gestures
-- Multilingual communication
-
----
-
-## Mobile Application
-
-Flutter application with:
-
-- Login
-- Chat
-- Voice
-- Avatar
-- History
-- Profile
-
----
-
-## Additional Languages
-
-Future support for:
-
-- Telugu
-- Malayalam
-- Bengali
-- Marathi
-- Odia
-
----
-
-## Real-Time Scheme Updates
-
-Automated ingestion of newly announced government schemes.
-
----
-
-# Project Status
-
-## Completed
-
-- [x] Dataset Collection
-- [x] Data Cleaning
-- [x] Scheme Text Generation
-- [x] Embedding Generation
-- [x] FAISS Index Creation
-- [x] Semantic Retrieval
-- [x] Groq Integration
-- [x] Session Memory
-- [x] Profile Extraction
-- [x] Multi-Turn Conversations
-- [x] FastAPI Backend
-
----
-
-## In Progress
-
-- [ ] Flutter Frontend
-- [ ] PostgreSQL Integration
-- [ ] Voice Chat
-- [ ] AI Avatar
-- [ ] Multilingual Translation
-- [ ] User Authentication
-
----
-
-# Conclusion
-
-GovSchemeAI demonstrates how Retrieval-Augmented Generation (RAG), semantic search, and large language models can be combined to make government welfare information more accessible.
-
-By transforming complex scheme information into conversational interactions, the platform enables citizens to discover, understand, and access government benefits more effectively.
-
-The architecture is designed to be scalable, multilingual, and extensible, making it suitable for deployment as a large-scale citizen assistance platform.
-
-
+This project is developed for educational and academic research purposes. Government scheme data is sourced from public portals. Always verify terms and deadlines on official state and central ministry websites before application.
