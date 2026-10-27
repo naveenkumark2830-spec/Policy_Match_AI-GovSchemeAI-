@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import numpy as np
 
@@ -5,10 +6,11 @@ print("=" * 70)
 print("CLEANING DATA - STEP 1")
 print("=" * 70)
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+input_path = os.path.join(BASE_DIR, "data", "schemes_with_text.csv")
+
 # Load raw data
-df = pd.read_csv(
-    r"D:\GovSchemeAI\data\schemes_with_text.csv"
-)
+df = pd.read_csv(input_path)
 
 print(f"\n Original data:")
 print(f"   Rows: {len(df)}")
@@ -64,7 +66,7 @@ for i, text in enumerate(df['scheme_text'].head(3).tolist(), 1):
     print(f"   {i}. {text[:80]}...")
 
 # Save cleaned
-output_path = r"C:\Users\navee\OneDrive\Attachments\Desktop\GovSchemeAI\data\cleaned_schemes.csv"
+output_path = os.path.join(BASE_DIR, "data", "cleaned_schemes.csv")
 df.to_csv(output_path, index=False)
 print(f"\n Cleaned data saved: {output_path}")
 print(f"   Total rows: {len(df)}")

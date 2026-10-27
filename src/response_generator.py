@@ -18,11 +18,12 @@ class ResponseGenerator:
         query: str,
         profile: Dict,
         schemes: List[Dict],
-        conversation_history: List[Dict] = None
+        conversation_history: List[Dict] = None,
+        language: str = "English"
     ) -> str:
         """Generate response"""
         
-        logger.info("Generating response")
+        logger.info(f"Generating response in language: {language}")
         
         schemes_text = "\n".join([
             f"{i+1}. {s['full_scheme'][:200]}"
@@ -39,6 +40,8 @@ class ResponseGenerator:
                     history_context += f"You explained: {msg['content'][:150]}\n"
         
         prompt = f"""You are a helpful government schemes advisor. Provide clear, simple explanations.
+CRITICAL: You MUST write your entire response in the {language} language.
+Do not use markdown formatting like '***' or '**' in your response. Keep it clean and readable as plain text.
 
 User Profile: Age {profile.get('age', '?')}, {profile.get('occupation', 'unknown')}, {profile.get('state', 'unknown')}, Category: {profile.get('category', 'General')}
 Current Query: {query}{history_context}
@@ -59,10 +62,12 @@ Keep response clear, practical, and action-oriented."""
                 model=self.model,
                 messages=[{"role": "user", "content": prompt}],
                 temperature=0.3,
-                max_tokens=600,
+                max_tokens=1200,
             )
             
             response = msg.choices[0].message.content
+            # Sanitize response
+            response = response.replace("***", "").replace("**", "")
             logger.info("Response generated successfully")
             return response
         
@@ -74,11 +79,12 @@ Keep response clear, practical, and action-oriented."""
         self,
         question: str,
         previous_response: str,
-        schemes: List[Dict]
+        schemes: List[Dict],
+        language: str = "English"
     ) -> str:
         """Answer follow-up questions"""
         
-        logger.info("Answering follow-up question")
+        logger.info(f"Answering follow-up question in language: {language}")
         
         schemes_text = "\n".join([s['full_scheme'][:150] for s in schemes[:3]])
         
@@ -88,7 +94,9 @@ User's follow-up question: {question}
 
 Schemes mentioned: {schemes_text}
 
-Provide a focused answer to their follow-up question, building on what was already explained."""
+Provide a focused answer to their follow-up question in the {language} language.
+CRITICAL: You MUST write your entire response in the {language} language.
+Do not use markdown formatting like '***' or '**' in your response. Keep it clean and readable as plain text."""
 
         try:
             msg = self.client.chat.completions.create(
@@ -99,6 +107,8 @@ Provide a focused answer to their follow-up question, building on what was alrea
             )
             
             response = msg.choices[0].message.content
+            # Sanitize response
+            response = response.replace("***", "").replace("**", "")
             logger.info("Follow-up answer generated")
             return response
         

@@ -7,8 +7,10 @@ print("=" * 70)
 print("CREATING EMBEDDINGS - STEP 2")
 print("=" * 70)
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 # Load CLEANED data
-cleaned_path = r"D:\GovSchemeAI\data\cleaned_schemes.csv"
+cleaned_path = os.path.join(BASE_DIR, "data", "cleaned_schemes.csv")
 
 if not os.path.exists(cleaned_path):
     print(f" ERROR: {cleaned_path} not found!")
@@ -63,9 +65,10 @@ print(f"   Shape: {embeddings.shape}")
 print(f"   Data type: {embeddings.dtype}")
 
 # Save embeddings
-os.makedirs(r"C:\Users\navee\OneDrive\Attachments\Desktop\GovSchemeAI\models", exist_ok=True)
+models_dir = os.path.join(BASE_DIR, "models")
+os.makedirs(models_dir, exist_ok=True)
 
-embeddings_path = r"C:\Users\navee\OneDrive\Attachments\Desktop\GovSchemeAI\models\embeddings.npy"
+embeddings_path = os.path.join(models_dir, "embeddings.npy")
 np.save(embeddings_path, embeddings)
 print(f"Embeddings saved: {embeddings_path}")
 
@@ -75,7 +78,7 @@ df_clean = pd.DataFrame({
     'embedding_id': range(len(texts))
 })
 
-metadata_path = r"C:\Users\navee\OneDrive\Attachments\Desktop\GovSchemeAI\data\schemes_with_embeddings.csv"
+metadata_path = os.path.join(BASE_DIR, "data", "schemes_with_embeddings.csv")
 df_clean.to_csv(metadata_path, index=False)
 print(f"Metadata saved: {metadata_path}")
 

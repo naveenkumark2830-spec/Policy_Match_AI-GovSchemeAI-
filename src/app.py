@@ -27,7 +27,7 @@ class GovernmentSchemeAssistant:
         
         self.extractor = ProfileExtractor(groq_api_key=groq_key)
         
-        base_path = r"D:\GovSchemeAI"
+        base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self.rag = OptimizedRAGEngine(base_path)
         
         self.generator = ResponseGenerator(groq_api_key=groq_key)
@@ -35,31 +35,32 @@ class GovernmentSchemeAssistant:
         
         logger.info("Assistant initialization complete")
     
-    def process_message(self, user_message: str) -> str:
-        logger.info(f"Processing: {user_message[:50]}")
+    def process_message(self, user_message: str, language: str = "English") -> str:
+        logger.info(f"Processing: {user_message[:50]} in {language}")
         self.conversation.add_user_message(user_message)
         
         if is_followup_question(user_message, self.conversation.history):
             logger.info("Detected follow-up question")
-            return self._handle_followup(user_message)
+            return self._handle_followup(user_message, language=language)
         else:
             logger.info("New question")
-            return self._handle_new_question(user_message)
+            return self._handle_new_question(user_message, language=language)
     
-    def _handle_new_question(self, user_message: str) -> str:
+    def _handle_new_question(self, user_message: str, language: str = "English") -> str:
         logger.info("Handling new question")
         
         profile = self.extractor.extract(user_message)
         self.conversation.update_profile(profile)
         
-        schemes = self.rag.search_by_profile(profile, top_k=5)
+        schemes = self.rag.search_by_profile(profile, top_k=5, user_query=user_message)
         self.conversation.update_context(schemes)
         
         response = self.generator.generate(
             user_message,
             profile,
             schemes,
-            self.conversation.get_history_for_llm()
+            self.conversation.get_history_for_llm(),
+            language=language
         )
         
         self.conversation.add_assistant_message(
@@ -69,7 +70,7 @@ class GovernmentSchemeAssistant:
         
         return response
     
-    def _handle_followup(self, user_message: str) -> str:
+    def _handle_followup(self, user_message: str, language: str = "English") -> str:
         logger.info("Handling follow-up question")
         
         last_response = self._get_last_assistant_message()
@@ -79,18 +80,20 @@ class GovernmentSchemeAssistant:
             response = self.generator.answer_followup(
                 user_message,
                 last_response,
-                schemes
+                schemes,
+                language=language
             )
         else:
             profile = self.conversation.user_profile or self.extractor.extract(user_message)
-            schemes = self.rag.search_by_profile(profile, top_k=5)
+            schemes = self.rag.search_by_profile(profile, top_k=5, user_query=user_message)
             self.conversation.update_context(schemes)
             
             response = self.generator.generate(
                 user_message,
                 profile,
                 schemes,
-                self.conversation.get_history_for_llm()
+                self.conversation.get_history_for_llm(),
+                language=language
             )
         
         self.conversation.add_assistant_message(response)

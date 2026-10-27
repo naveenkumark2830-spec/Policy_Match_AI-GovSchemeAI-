@@ -1,7 +1,12 @@
+import os
 import pandas as pd
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+input_path = os.path.join(BASE_DIR, "data", "updated_data.csv")
+output_path = os.path.join(BASE_DIR, "data", "cleaned_schemes.csv")
+
 # Load dataset
-df = pd.read_csv(r"D:\GovSchemeAI\data\updated_data.csv")
+df = pd.read_csv(input_path)
 
 print("Before Cleaning")
 print(df.shape)
@@ -20,9 +25,6 @@ print("\nAfter Cleaning")
 print(df.shape)
 
 # Save cleaned dataset
-df.to_csv(
-    r"D:\GovSchemeAI\data\cleaned_schemes.csv",
-    index=False
-)
+df.to_csv(output_path, index=False)
 
 print("Dataset Cleaned Successfully")

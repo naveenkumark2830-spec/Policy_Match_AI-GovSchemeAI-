@@ -99,11 +99,22 @@ Use null for missing values."""
             profile["gender"] = "male"
         
         occupation_map = {
-            r'student': 'student',
-            r'employed|job|working': 'employed',
-            r'self-employed|business': 'self-employed',
-            r'retired': 'retired',
-        }
+                r'student': 'student',
+
+                r'farmer|agriculture|cultivator':'farmer',
+
+                r'unemployed|jobless':'unemployed',
+
+                r'widow':'widow',
+
+                r'senior citizen|old age|elderly':'senior_citizen',
+
+                r'employed|job|working':'employed',
+
+                r'self-employed|business':'self-employed',
+
+                r'retired':'retired'
+}
         for pattern, label in occupation_map.items():
             if re.search(pattern, query_lower):
                 profile["occupation"] = label

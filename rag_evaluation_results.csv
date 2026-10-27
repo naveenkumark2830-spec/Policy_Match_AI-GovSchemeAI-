@@ -1,0 +1,26 @@
+query,ndcg,mrr,precision_at_k,recall,hit_rate,relevant_count,retrieved_relevant
+widow pension,1.0,1.0,1.0,0.5,1,10,5
+widow financial assistance,1.0,1.0,1.0,0.7142857142857143,1,7,5
+single woman pension,0.6843515475204855,1.0,0.6,0.375,1,8,3
+widow welfare scheme,1.0,1.0,1.0,0.5,1,10,5
+widow benefits,1.0,1.0,1.0,0.5,1,10,5
+student scholarship,1.0,1.0,1.0,0.5,1,10,5
+college scholarship,1.0,1.0,1.0,0.5,1,10,5
+higher education aid,0.6608397947263839,0.5,0.8,0.4444444444444444,1,9,4
+merit scholarship,1.0,1.0,1.0,0.625,1,8,5
+student financial assistance,1.0,1.0,1.0,0.5,1,10,5
+farmer financial assistance,1.0,1.0,1.0,0.38461538461538464,1,13,5
+agriculture subsidy,0.0,0.0,0.0,0.0,0,4,0
+crop support scheme,1.0,1.0,1.0,0.5,1,10,5
+organic farming support,1.0,1.0,1.0,0.8333333333333334,1,6,5
+farm equipment subsidy,1.0,1.0,1.0,0.625,1,8,5
+old age pension,1.0,1.0,1.0,0.5,1,10,5
+senior citizen pension,1.0,1.0,1.0,0.5,1,10,5
+retirement support,0.3903800499921017,1.0,0.2,0.25,1,4,1
+elderly welfare scheme,1.0,1.0,1.0,0.5555555555555556,1,9,5
+old age financial assistance,1.0,1.0,1.0,0.5555555555555556,1,9,5
+job training,1.0,1.0,1.0,0.5,1,10,5
+skill development,1.0,1.0,1.0,0.5,1,10,5
+unemployment assistance,0.830419897363192,1.0,0.8,0.5714285714285714,1,7,4
+vocational training,1.0,1.0,1.0,0.5,1,10,5
+employment scheme,0.38356636737133565,0.5,0.4,0.3333333333333333,1,6,2

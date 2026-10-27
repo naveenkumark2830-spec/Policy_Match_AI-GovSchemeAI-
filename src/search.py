@@ -15,8 +15,10 @@ class SchemeSearchEngine:
         self.model = SentenceTransformer("all-MiniLM-L6-v2")
         print("✅ Model loaded")
         
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
         # Load FAISS index
-        index_path = r"D:\GovSchemeAI\models\scheme_index.faiss"
+        index_path = os.path.join(BASE_DIR, "models", "scheme_index.faiss")
         if not os.path.exists(index_path):
             print(f"❌ ERROR: {index_path} not found!")
             exit()
@@ -26,7 +28,7 @@ class SchemeSearchEngine:
         print(f"✅ Index loaded (total vectors: {self.index.ntotal})")
         
         # Load metadata
-        metadata_path = r"D:\GovSchemeAI\data\cleaned_schemes.csv"
+        metadata_path = os.path.join(BASE_DIR, "data", "cleaned_schemes.csv")
         if not os.path.exists(metadata_path):
             print(f"❌ ERROR: {metadata_path} not found!")
             exit()

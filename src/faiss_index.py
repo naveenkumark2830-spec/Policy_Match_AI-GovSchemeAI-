@@ -18,7 +18,7 @@ if torch.cuda.is_available():
     print(f"   GPU Memory: {torch.cuda.get_device_properties(0).total_memory / 1024**3:.2f} GB")
 
 # ============= PATHS =============
-BASE_PATH = r"D:\GovSchemeAI"
+BASE_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_PATH = os.path.join(BASE_PATH, "data", "cleaned_schemes.csv")
 MODELS_DIR = os.path.join(BASE_PATH, "models")
 INDEX_PATH = os.path.join(MODELS_DIR, "scheme_index.faiss")

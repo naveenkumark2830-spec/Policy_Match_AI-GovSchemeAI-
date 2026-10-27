@@ -1,7 +1,9 @@
+import os
 from src.rag_engine import OptimizedRAGEngine
 import pandas as pd
 
-rag = OptimizedRAGEngine(r"C:\GovSchemeAI\GovSchemeAI")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+rag = OptimizedRAGEngine(BASE_DIR)
 
 QUERIES = [
     # Widow
@@ -68,9 +70,7 @@ for query in QUERIES:
 
 df = pd.DataFrame(rows)
 
-df.to_csv(
-    r"C:\GovSchemeAI\GovSchemeAI\candidate_ground_truth.csv",
-    index=False
-)
+output_path = os.path.join(BASE_DIR, "data", "candidate_ground_truth.csv")
+df.to_csv(output_path, index=False)
 
-print("\nSaved to candidate_ground_truth.csv")
+print(f"\nSaved to {output_path}")

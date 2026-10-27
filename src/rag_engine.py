@@ -134,12 +134,14 @@ class OptimizedRAGEngine:
         
         return results
     
-    def search_by_profile(self, profile: Dict, top_k: int = 5) -> List[Dict]:
-        """Search by profile"""
+    def search_by_profile(self, profile: Dict, top_k: int = 5, user_query: str = None) -> List[Dict]:
+        """Search by profile with optional user query enrichment"""
         
         logger.info("Profile search")
         
         query_parts = []
+        if user_query:
+            query_parts.append(user_query.strip())
         
         if profile.get('age'):
             age = profile['age']
@@ -152,13 +154,21 @@ class OptimizedRAGEngine:
         
         if profile.get('occupation'):
             occupation_keywords = {
-                'student': 'education scholarship student',
-                'widow': 'widow pension women welfare',
-                'farmer': 'farmer agriculture subsidy financial assistance',
-                'unemployed': 'job training unemployment skill development',
-                'employed': 'salary employment provident fund savings',
-                'self-employed': 'business loan entrepreneur MSME',
-                'retired': 'pension retirement savings',
+                'student':'education scholarship student',
+
+                'farmer':'farmer agriculture subsidy financial assistance',
+
+                'widow':'widow pension women welfare',
+
+                'unemployed':'job training unemployment skill development',
+
+                'senior_citizen':'senior citizen pension retirement',
+
+                'employed':'salary employment provident fund savings',
+
+                'self-employed':'business loan entrepreneur MSME',
+
+                'retired':'pension retirement savings'
 }
             keyword = occupation_keywords.get(profile['occupation'], '')
             if keyword:
@@ -178,4 +188,7 @@ class OptimizedRAGEngine:
             query_parts.append(f"{profile['category']} category")
         
         query = " ".join(filter(None, query_parts)) or "government scheme"
+        print("\n========== RAG QUERY ==========")
+        print(query)
+        print("==============================\n")       
         return self.search(query, top_k)

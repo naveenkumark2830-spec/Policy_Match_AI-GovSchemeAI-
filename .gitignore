@@ -2,22 +2,36 @@
 venv/
 .venv/
 env/
+ENV/
 
-# Environment Variables
+# Environment Variables & Secrets
 .env
+*.env.local
 
-# Python Cache
+# Python Cache & Bytecode
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+*.so
 
-# IDE Files
+# Distribution & Build
+dist/
+build/
+*.egg-info/
+
+# IDE & Editor Files
 .vscode/
 .idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
 
 # Logs
 *.log
+logs/
 
-# Model Files (optional)
+# Model Weights (if large/binary)
 *.pt
 *.pth
 *.h5

@@ -1,3 +1,4 @@
+import os
 from src.rag_engine import OptimizedRAGEngine
 import pandas as pd
 import numpy as np
@@ -204,13 +205,17 @@ def evaluate_rag_system():
 
     evaluator = RAGEvaluator()
 
-    rag = OptimizedRAGEngine(
-        r"C:\GovSchemeAI\GovSchemeAI"
-    )
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+    rag = OptimizedRAGEngine(BASE_DIR)
 
     # Load labeled ground truth file
+    gt_path = os.path.join(BASE_DIR, "data", "candidate_ground_truth.csv")
+    if not os.path.exists(gt_path):
+        gt_path = os.path.join(BASE_DIR, "candidate_ground_truth.csv")
+
     ground_truth = pd.read_csv(
-        r"C:\GovSchemeAI\GovSchemeAI\candidate_ground_truth.csv",
+        gt_path,
         encoding="utf-8-sig"
     )
 
@@ -263,7 +268,7 @@ def evaluate_rag_system():
     evaluator.print_report()
 
     evaluator.export_results(
-        r"C:\GovSchemeAI\GovSchemeAI\rag_evaluation_results.csv"
+        os.path.join(BASE_DIR, "rag_evaluation_results.csv")
     )
 
     return evaluator
